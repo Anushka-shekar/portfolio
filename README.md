@@ -15,6 +15,3 @@ Open http://localhost:5173
 All details live in `server/data/portfolio.js` (name, email, links, skills, projects, internships).
 Both the React site and the Streamlit app read it through `GET /api/portfolio`.
 
-## Optional
-- MongoDB Atlas: copy `server/.env.example` to `server/.env` and set MONGO_URI. Contact messages then save to MongoDB; otherwise they save to `server/messages.json`.
-- Deploy: `npm run build` then `npm start` serves the site and API together. Deploy Streamlit separately (Streamlit Community Cloud) and set `VITE_STREAMLIT_URL` in `client/.env`.
