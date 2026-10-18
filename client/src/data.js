@@ -8,9 +8,9 @@ export const profile = {
   learningNow: "Currently strengthening my foundations in Data Structures and Algorithms, backend development, system design, and applied AI.",
   goal: "To become a skilled software engineer with strong development, problem-solving, and system design fundamentals.",
   location: "Bengaluru, Karnataka, India",
-  email: "anushkashekar239@gmail.com",                    // TODO: your email
+  email: "anushkashekar239@example.com",                    // TODO: your email
   github: "https://github.com/Anushka-shekar",       // TODO: your GitHub
-  linkedin: "https://www.linkedin.com/in/anushka-c-93374434a" // TODO: your LinkedIn
+  linkedin: "https://www.linkedin.com/in/anushka-c-93374434a" 
 };
 export const education = { degree:"Bachelor of Engineering, Information Science and Engineering", school:"Dayananda Sagar Academy of Technology and Management (DSATM)", place:"Bengaluru, Karnataka, India", year:"3rd Year (currently pursuing)", cgpa:"9.2" };
 export const interests = ["Full stack development","AI-powered applications","API security","Workflow automation","Data structures and algorithms"];

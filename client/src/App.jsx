@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { Github, Linkedin, Mail, Check, ExternalLink, ArrowDown, Send, MapPin } from "lucide-react";
+import data from "./data.js";
+import { Github, Linkedin, Mail, Check, ArrowDown, Send, MapPin } from "lucide-react";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-// Where your Streamlit app runs. Set VITE_STREAMLIT_URL in client/.env after deploying it.
-const STREAMLIT_URL = import.meta.env.VITE_STREAMLIT_URL || "http://localhost:8501/?embed=true";
 const NAV = ["about", "skills", "projects", "experience", "education", "contact"];
 
 function useTyping(lines) {
@@ -100,82 +99,32 @@ function Hero({ d }) {
 }
 
 function About({ d }) {
-  const { profile: p, education: e, interests } = d;
-
+  const { profile: p, interests } = d;
   return (
-    <Section
-      id="about"
-      title="About me"
-      sub="Who I am, what I'm learning, and where I'm headed."
-    >
+    <Section id="about" title="About me" sub="Who I am, what I'm learning, and where I'm headed.">
       <div className="bento">
-
-        {/* About introduction */}
-        <div className="card b-intro">
+        <div className="card b-intro" style={{ gridColumn: "1 / -1" }}>
           <p className="big">{p.intro2}</p>
-
           <p className="mute">{p.learningNow}</p>
-
           <p style={{ marginTop: "1rem" }}>
             <b>I learn by building.</b>{" "}
-            <span className="mute">
-              I pick a real problem, ship a working version, then go back and
-              learn why it broke.
-            </span>
+            <span className="mute">I pick a real problem, ship a working version, then go back and learn why it broke.</span>
           </p>
-
-          {/* Resume buttons */}
+          {/* Put your resume at client/public/resume.pdf */}
           <div className="row" style={{ marginTop: "1.25rem" }}>
-            <a
-              className="btn p"
-              href="/resume.pdf"
-              target="_blank"
-              rel="noreferrer"
-            >
-              View Resume
-            </a>
-
-            <a
-              className="btn"
-              href="/resume.pdf"
-              download="Anushka-Shekar-Resume.pdf"
-            >
-              Download Resume
-            </a>
+            <a className="btn p" href="/resume.pdf" target="_blank" rel="noreferrer">View Resume</a>
+            <a className="btn" href="/resume.pdf" download="Anushka-Shekar-Resume.pdf">Download Resume</a>
           </div>
         </div>
-
-        
-
-        
-
-        {/* Career direction */}
         <div className="card b-goal">
           <h3>Career direction</h3>
           <p className="mute">{p.goal}</p>
         </div>
-
-        {/* Technical interests */}
         <div className="card b-int">
           <h3>Technical interests</h3>
-
           <Tags items={interests} />
-
-          <p
-            className="mute"
-            style={{
-              marginTop: "1rem",
-              fontSize: ".88rem",
-              display: "flex",
-              gap: ".4rem",
-              alignItems: "center",
-            }}
-          >
-            <MapPin size={14} />
-            {p.location}
-          </p>
+          <p className="mute" style={{ marginTop: "1rem", fontSize: ".88rem", display: "flex", gap: ".4rem", alignItems: "center" }}><MapPin size={14} />{p.location}</p>
         </div>
-
       </div>
     </Section>
   );
@@ -202,22 +151,16 @@ function Projects({ projects }) {
           <p className="acc" style={{ fontSize: ".88rem" }}>{p.cat}</p><h3>{p.title}</h3><p className="mute">{p.desc}</p>
           <ul className="feat">{p.features.map((f) => <li key={f}><Check size={14} />{f}</li>)}</ul>
           <Tags items={p.stack} />
-          <div className="links"><a href={p.github} target="_blank" rel="noreferrer">
-    <Github size={16} />GitHub
-  </a></div>
+          <div className="links"><a href={p.github} target="_blank" rel="noreferrer"><Github size={16} />GitHub</a></div>
         </div>
         <div className="card mock">
           <div className="bar"><i /><i /><i /><span className="mono">{p.file} / preview</span></div>
           <div className="bd">{p.features.slice(0, 3).map((f) => <div className="mrow" key={f}><small className="mono">feature</small><p>{f}</p><u /></div>)}</div>
-          <div className="note mono">Replace with a screenshot: put an image in client/public/screens/{p.file}.png</div>
         </div>
       </div>
     </Section>
   );
 }
-
-
-
 
 const Experience = ({ experience }) => (
   <Section id="experience" title="Internships" sub="Hands-on experience, in my own words.">
@@ -235,44 +178,25 @@ const Education = ({ education: e, learning }) => (
 );
 
 function Contact({ profile }) {
-  const [f, setF] = useState({ name: "", email: "", message: "" });
-  const [msg, setMsg] = useState("");
-  const submit = async (e) => {
-    e.preventDefault(); setMsg("Sending...");
-    try {
-      const r = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(f) });
-      const text = await r.text();
-const j = text ? JSON.parse(text) : {};
-
-if (!r.ok) {
-  throw new Error(j.error || `Request failed: ${r.status}`);
-}
-      setMsg("Thanks! Your message was sent."); setF({ name: "", email: "", message: "" });
-    } catch (err) { setMsg(err.message || "Could not send. Please email me directly."); }
-  };
-  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   return (
     <section className="s" id="contact"><div className="wrap rv"><div className="card cta">
-      <div><h2>Let's build something.</h2><p className="mute" style={{ marginTop: "1rem" }}>Open to internships, collaborations and conversations about software.</p>
-        <div className="cl"><a href={`mailto:${profile.email}`}><Mail size={18} />{profile.email}</a><a href={profile.linkedin}><Linkedin size={18} />LinkedIn</a><a href={profile.github}><Github size={18} />GitHub</a></div></div>
-      <form onSubmit={submit}>
-        <div><label htmlFor="n">Name</label><input id="n" required value={f.name} onChange={set("name")} autoComplete="name" /></div>
-        <div><label htmlFor="e">Email</label><input id="e" type="email" required value={f.email} onChange={set("email")} autoComplete="email" /></div>
-        <div><label htmlFor="m">Message</label><textarea id="m" rows="4" required value={f.message} onChange={set("message")} /></div>
-        <button className="btn p" type="submit"><Send size={16} />Send message</button>
-        <p className="mute" role="status" style={{ fontSize: ".85rem", marginTop: ".7rem" }}>{msg}</p>
-      </form>
+      <div>
+        <h2>Let's build something.</h2>
+        <p className="mute" style={{ marginTop: "1rem" }}>Open to internships, collaborations and conversations about software. The best way to reach me is email.</p>
+      </div>
+      <div className="cl" style={{ alignContent: "center" }}>
+        <a className="btn p" href={`mailto:${profile.email}`}><Mail size={18} />{profile.email}</a>
+        <a className="btn" href={profile.linkedin} target="_blank" rel="noreferrer"><Linkedin size={18} />LinkedIn</a>
+        <a className="btn" href={profile.github} target="_blank" rel="noreferrer"><Github size={18} />GitHub</a>
+      </div>
     </div></div></section>
   );
 }
 
 export default function App() {
-  const [d, setD] = useState(null);
-  const [err, setErr] = useState(false);
+  const d = data;
   const [open, setOpen] = useState(false);
-  useEffect(() => { fetch("/api/portfolio").then((r) => r.json()).then(setD).catch(() => setErr(true)); }, []);
   useEffect(() => {
-    if (!d) return;
     const move = (e) => {
       const g = document.getElementById("glow").style; g.setProperty("--x", e.clientX + "px"); g.setProperty("--y", e.clientY + "px");
       const c = e.target.closest?.(".card");
@@ -285,8 +209,6 @@ export default function App() {
     return () => { removeEventListener("pointermove", move); removeEventListener("scroll", scroll); io.disconnect(); };
   }, [d]);
 
-  if (err) return <p style={{ padding: "2rem" }}>Could not reach the API. Start the server with <code>npm run dev</code> from the project root.</p>;
-  if (!d) return <p style={{ padding: "2rem" }} className="mute">Loading...</p>;
   const all = d.skills.flatMap((s) => s[1]);
   return (
     <>
